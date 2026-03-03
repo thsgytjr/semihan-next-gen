@@ -17,6 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -37,6 +38,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const { isMobile, setOpenMobile } = useSidebar();
 
   const navItems = [
     {
@@ -97,7 +99,10 @@ export function AppSidebar() {
                     isActive={pathname === item.href}
                     tooltip={item.title}
                   >
-                    <Link href={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={() => isMobile && setOpenMobile(false)}
+                    >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
                     </Link>

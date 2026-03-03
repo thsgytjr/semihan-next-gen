@@ -117,6 +117,21 @@ export async function updateStudent(studentId: string, formData: FormData) {
 export async function deleteStudent(studentId: string) {
   const supabase = await createClient();
 
+  // Fetch photo_url before deleting
+  const { data: student } = await supabase
+    .from("students")
+    .select("photo_url")
+    .eq("id", studentId)
+    .single();
+
+  // Delete photo from storage if exists
+  if (student?.photo_url) {
+    const storagePath = student.photo_url.split("/student-photos/")[1];
+    if (storagePath) {
+      await supabase.storage.from("student-photos").remove([storagePath]);
+    }
+  }
+
   // Soft delete
   const { error } = await supabase
     .from("students")
