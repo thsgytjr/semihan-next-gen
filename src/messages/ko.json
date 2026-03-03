@@ -1,0 +1,90 @@
+{
+  "common": {
+    "appName": "세미한 차세대",
+    "loading": "로딩 중...",
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "edit": "수정",
+    "add": "추가",
+    "search": "검색",
+    "back": "뒤로",
+    "confirm": "확인",
+    "yes": "예",
+    "no": "아니오",
+    "noData": "데이터가 없습니다",
+    "error": "오류가 발생했습니다",
+    "success": "성공적으로 처리되었습니다"
+  },
+  "auth": {
+    "login": "로그인",
+    "logout": "로그아웃",
+    "email": "이메일",
+    "password": "비밀번호",
+    "signUp": "회원가입",
+    "loginTitle": "세미한 차세대 교육국",
+    "loginSubtitle": "교사 로그인",
+    "loginButton": "로그인",
+    "signUpButton": "회원가입",
+    "noAccount": "계정이 없으신가요?",
+    "hasAccount": "이미 계정이 있으신가요?",
+    "signUpSuccess": "회원가입이 완료되었습니다. 이메일을 확인해주세요.",
+    "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다"
+  },
+  "nav": {
+    "dashboard": "대시보드",
+    "students": "학생 관리",
+    "attendance": "출석 체크",
+    "attendanceHistory": "출석 기록",
+    "settings": "설정",
+    "departments": "부서 관리"
+  },
+  "dashboard": {
+    "title": "대시보드",
+    "welcome": "환영합니다, {name}님!",
+    "totalStudents": "전체 학생",
+    "todayAttendance": "오늘 출석",
+    "attendanceRate": "출석률",
+    "recentEvents": "최근 이벤트"
+  },
+  "students": {
+    "title": "학생 관리",
+    "addStudent": "학생 등록",
+    "editStudent": "학생 수정",
+    "studentName": "이름",
+    "photo": "사진",
+    "uploadPhoto": "사진 업로드",
+    "changePhoto": "사진 변경",
+    "birthDate": "생년월일",
+    "notes": "메모",
+    "active": "활성",
+    "inactive": "비활성",
+    "deleteConfirm": "이 학생을 삭제하시겠습니까?",
+    "noStudents": "등록된 학생이 없습니다",
+    "addFirstStudent": "첫 번째 학생을 등록해주세요",
+    "totalCount": "총 {count}명",
+    "studentDetail": "학생 상세",
+    "attendanceHistory": "출석 이력"
+  },
+  "attendance": {
+    "title": "출석 체크",
+    "selectDate": "날짜 선택",
+    "sundayWorship": "주일 예배",
+    "special": "특별 행사",
+    "checkedIn": "출석",
+    "absent": "결석",
+    "present": "{count}명 출석",
+    "total": "전체 {count}명",
+    "attendanceRate": "{rate}% 출석률",
+    "noEventYet": "이 날짜에 이벤트가 없습니다",
+    "createEvent": "이벤트 생성",
+    "history": "출석 기록",
+    "date": "날짜",
+    "eventType": "이벤트 유형",
+    "markAll": "전체 출석",
+    "unmarkAll": "전체 해제"
+  },
+  "departments": {
+    "sprout": "영아부 (Sprout)"
+  }
+}

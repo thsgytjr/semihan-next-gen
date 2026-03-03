@@ -1,0 +1,90 @@
+{
+  "common": {
+    "appName": "Semihan Next-Gen",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "back": "Back",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "noData": "No data available",
+    "error": "An error occurred",
+    "success": "Successfully processed"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "signUp": "Sign Up",
+    "loginTitle": "Semihan Next-Gen Education",
+    "loginSubtitle": "Teacher Login",
+    "loginButton": "Login",
+    "signUpButton": "Sign Up",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUpSuccess": "Sign up complete! Please check your email.",
+    "invalidCredentials": "Invalid email or password"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "students": "Students",
+    "attendance": "Attendance",
+    "attendanceHistory": "Attendance History",
+    "settings": "Settings",
+    "departments": "Departments"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {name}!",
+    "totalStudents": "Total Students",
+    "todayAttendance": "Today's Attendance",
+    "attendanceRate": "Attendance Rate",
+    "recentEvents": "Recent Events"
+  },
+  "students": {
+    "title": "Student Management",
+    "addStudent": "Add Student",
+    "editStudent": "Edit Student",
+    "studentName": "Name",
+    "photo": "Photo",
+    "uploadPhoto": "Upload Photo",
+    "changePhoto": "Change Photo",
+    "birthDate": "Date of Birth",
+    "notes": "Notes",
+    "active": "Active",
+    "inactive": "Inactive",
+    "deleteConfirm": "Are you sure you want to delete this student?",
+    "noStudents": "No students registered",
+    "addFirstStudent": "Add your first student",
+    "totalCount": "{count} total",
+    "studentDetail": "Student Detail",
+    "attendanceHistory": "Attendance History"
+  },
+  "attendance": {
+    "title": "Attendance Check",
+    "selectDate": "Select Date",
+    "sundayWorship": "Sunday Worship",
+    "special": "Special Event",
+    "checkedIn": "Present",
+    "absent": "Absent",
+    "present": "{count} present",
+    "total": "{count} total",
+    "attendanceRate": "{rate}% attendance",
+    "noEventYet": "No event for this date",
+    "createEvent": "Create Event",
+    "history": "Attendance History",
+    "date": "Date",
+    "eventType": "Event Type",
+    "markAll": "Mark All Present",
+    "unmarkAll": "Unmark All"
+  },
+  "departments": {
+    "sprout": "Sprout (Nursery)"
+  }
+}
