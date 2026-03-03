@@ -44,15 +44,16 @@ export function AttendanceDatePicker({
         <Button
           variant="outline"
           className={cn(
-            "justify-start text-left font-normal min-w-[200px]",
+            "justify-start text-left font-normal gap-2 rounded-xl h-9 px-3 text-sm",
             !selectedDate && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {format(date, "PPP", { locale: dateLocale })}
+          <CalendarIcon className="h-4 w-4 text-muted-foreground shrink-0" />
+          <span className="hidden sm:inline">{format(date, "PPP", { locale: dateLocale })}</span>
+          <span className="sm:hidden">{format(date, "MM/dd (EEE)", { locale: dateLocale })}</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0" align="end">
         <Calendar
           mode="single"
           selected={date}

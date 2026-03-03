@@ -55,6 +55,7 @@
     "photo": "Photo",
     "uploadPhoto": "Upload Photo",
     "changePhoto": "Change Photo",
+    "photoHint": "Select photo to crop in circle · Auto-compressed if large",
     "birthDate": "Date of Birth",
     "notes": "Notes",
     "active": "Active",

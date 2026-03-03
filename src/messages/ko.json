@@ -55,6 +55,7 @@
     "photo": "사진",
     "uploadPhoto": "사진 업로드",
     "changePhoto": "사진 변경",
+    "photoHint": "사진 선택 후 원형 크롭 · 500KB 이상 자동 압축",
     "birthDate": "생년월일",
     "notes": "메모",
     "active": "활성",

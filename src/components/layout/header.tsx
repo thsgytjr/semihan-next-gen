@@ -10,11 +10,14 @@ interface HeaderProps {
 
 export function Header({ title, children }: HeaderProps) {
   return (
-    <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:px-6">
-      <SidebarTrigger className="-ml-1" />
-      <Separator orientation="vertical" className="h-6" />
-      <h1 className="text-lg font-semibold">{title}</h1>
-      <div className="ml-auto flex items-center gap-2">{children}</div>
+    <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b bg-background/95 backdrop-blur px-4 lg:px-6">
+      {/* Desktop: sidebar trigger */}
+      <div className="hidden lg:flex items-center gap-2">
+        <SidebarTrigger className="-ml-1" />
+        <Separator orientation="vertical" className="h-6" />
+      </div>
+      <h1 className="text-base font-bold tracking-tight flex-1 lg:text-lg">{title}</h1>
+      <div className="flex items-center gap-2">{children}</div>
     </header>
   );
 }

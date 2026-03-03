@@ -1,16 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { format } from "date-fns";
 
 type Props = {
@@ -67,73 +57,52 @@ export default async function AttendanceHistoryPage({ params }: Props) {
       <Header title={t("attendance.history")} />
 
       <main className="flex-1 p-4 lg:p-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("attendance.history")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {!events || events.length === 0 ? (
-              <p className="text-muted-foreground text-sm text-center py-8">
-                {t("common.noData")}
-              </p>
-            ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t("attendance.date")}</TableHead>
-                      <TableHead>{t("attendance.eventType")}</TableHead>
-                      <TableHead className="text-right">
-                        {t("attendance.checkedIn")}
-                      </TableHead>
-                      <TableHead className="text-right">
-                        {t("dashboard.attendanceRate")}
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {events.map((event) => {
-                      const count = eventAttendance[event.id] ?? 0;
-                      const rate =
-                        totalStudents && totalStudents > 0
-                          ? Math.round((count / totalStudents) * 100)
-                          : 0;
-                      return (
-                        <TableRow key={event.id}>
-                          <TableCell className="font-medium">
-                            {format(new Date(event.date + "T00:00:00"), "yyyy-MM-dd")}
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">
-                              {event.type === "sunday_worship"
-                                ? t("attendance.sundayWorship")
-                                : t("attendance.special")}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {count} / {totalStudents ?? 0}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Badge
-                              variant={rate >= 80 ? "default" : "secondary"}
-                              className={
-                                rate >= 80
-                                  ? "bg-green-600 hover:bg-green-700"
-                                  : ""
-                              }
-                            >
-                              {rate}%
-                            </Badge>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        {!events || events.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <p className="text-muted-foreground text-sm">{t("common.noData")}</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {events.map((event) => {
+              const count = eventAttendance[event.id] ?? 0;
+              const rate =
+                totalStudents && totalStudents > 0
+                  ? Math.round((count / totalStudents) * 100)
+                  : 0;
+              return (
+                <div
+                  key={event.id}
+                  className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card"
+                >
+                  {/* Rate indicator */}
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 font-bold text-sm ${
+                    rate >= 80
+                      ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
+                      : rate >= 50
+                      ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                      : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
+                  }`}>
+                    {rate}%
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm">
+                      {format(new Date(event.date + "T00:00:00"), "yyyy년 MM월 dd일")}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {event.type === "sunday_worship"
+                        ? t("attendance.sundayWorship")
+                        : t("attendance.special")}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="font-bold text-base">{count}<span className="text-muted-foreground font-normal text-xs">/{totalStudents ?? 0}</span></p>
+                    <p className="text-xs text-muted-foreground">명 출석</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </main>
     </>
   );

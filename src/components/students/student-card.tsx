@@ -2,9 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { StudentAvatar } from "@/components/students/student-avatar";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ChevronRight } from "lucide-react";
 import type { Student } from "@/types/database";
+import { cn } from "@/lib/utils";
 
 interface StudentCardProps {
   student: Student;
@@ -15,24 +16,36 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
   const t = useTranslations("students");
 
   return (
-    <Card
-      className="cursor-pointer hover:bg-accent/50 transition-colors group"
+    <div
+      className={cn(
+        "flex items-center gap-4 p-4 rounded-2xl border border-border bg-card",
+        "cursor-pointer active:scale-[0.98] transition-all duration-150",
+        "hover:border-green-500/30 hover:shadow-md hover:shadow-green-500/5",
+        !student.is_active && "opacity-60"
+      )}
       onClick={onClick}
     >
-      <CardContent className="flex items-center gap-4 p-4">
-        <StudentAvatar student={student} size="md" />
-        <div className="flex-1 min-w-0">
-          <p className="font-medium truncate">{student.name}</p>
-          {student.notes && (
-            <p className="text-sm text-muted-foreground truncate">
-              {student.notes}
-            </p>
-          )}
-        </div>
-        {!student.is_active && (
-          <Badge variant="secondary">{t("inactive")}</Badge>
+      <StudentAvatar student={student} size="md" />
+      <div className="flex-1 min-w-0">
+        <p className="font-semibold text-base truncate">{student.name}</p>
+        {student.birth_date && (
+          <p className="text-sm text-muted-foreground truncate">
+            {student.birth_date}
+          </p>
         )}
-      </CardContent>
-    </Card>
+        {student.notes && !student.birth_date && (
+          <p className="text-sm text-muted-foreground truncate">
+            {student.notes}
+          </p>
+        )}
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        {!student.is_active && (
+          <Badge variant="secondary" className="text-xs">{t("inactive")}</Badge>
+        )}
+        <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+      </div>
+    </div>
   );
 }
+
