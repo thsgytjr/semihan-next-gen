@@ -97,3 +97,28 @@ export async function updateClassTagColor(
   return { success: true };
 }
 
+export async function deleteClassTag(departmentId: string, tagName: string) {
+  const supabase = await createClient();
+
+  // Remove tag definition
+  const { error } = await supabase
+    .from("class_tags")
+    .delete()
+    .eq("department_id", departmentId)
+    .eq("name", tagName);
+
+  if (error) return { error: error.message };
+
+  // Clear class_tag from students who used this tag
+  const { error: e2 } = await supabase
+    .from("students")
+    .update({ class_tag: null })
+    .eq("department_id", departmentId)
+    .eq("class_tag", tagName);
+
+  if (e2) return { error: e2.message };
+
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+

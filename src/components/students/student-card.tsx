@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { StudentAvatar } from "@/components/students/student-avatar";
 import { Badge } from "@/components/ui/badge";
+import { ClassTag } from "@/components/ui/class-tag";
 import { ChevronRight, MapPin } from "lucide-react";
 import type { Student } from "@/types/database";
 import { cn } from "@/lib/utils";
@@ -53,15 +54,7 @@ export function StudentCard({ student, classTagColor, onClick }: StudentCardProp
           </Badge>
         )}
         {student.class_tag && (
-          <Badge
-            variant="outline"
-            className="text-xs font-medium"
-            style={classTagColor
-              ? { backgroundColor: classTagColor + "20", borderColor: classTagColor, color: classTagColor }
-              : {}}
-          >
-            {student.class_tag}
-          </Badge>
+          <ClassTag tag={student.class_tag} color={classTagColor} />
         )}
         {!student.is_active && (
           <Badge variant="secondary" className="text-xs">{t("inactive")}</Badge>

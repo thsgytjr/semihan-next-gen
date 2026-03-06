@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AssignToClassForm } from "@/components/teachers/assign-to-class-form";
+import { ClassTag } from "@/components/ui/class-tag";
 import { GraduationCap, Users, ChevronRight, Edit, MapPin } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -136,8 +137,8 @@ export default async function TeacherDetailPage({ params }: Props) {
 
             {Array.from(grouped.entries()).map(([classTag, groupStudents]) => (
               <div key={classTag}>
-                <div className="px-4 py-2 bg-muted/40">
-                  <span className="text-xs font-semibold text-muted-foreground">{classTag}</span>
+                <div className="px-4 py-2 bg-muted/40 flex items-center gap-2">
+                  <ClassTag tag={classTag} />
                   <span className="ml-2 text-xs text-muted-foreground">({groupStudents!.length}명)</span>
                 </div>
                 <div className="divide-y divide-border">

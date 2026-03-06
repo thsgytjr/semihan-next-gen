@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Users, ChevronRight, Plus, MapPin } from "lucide-react";
+import { ClassTag } from "@/components/ui/class-tag";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -107,12 +108,7 @@ export default async function TeachersPage({ params }: Props) {
                     {classes.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1">
                         {classes.map((cls) => (
-                          <span
-                            key={cls}
-                            className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                          >
-                            {cls}
-                          </span>
+                          <ClassTag key={cls} tag={cls} />
                         ))}
                       </div>
                     )}

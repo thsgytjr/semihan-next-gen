@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import { StudentAvatar } from "@/components/students/student-avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ClassTag } from "@/components/ui/class-tag";
 import { Separator } from "@/components/ui/separator";
 import { DeleteStudentButton } from "@/components/students/delete-student-button";
 import { Edit, Calendar, FileText, CheckCircle2, Clock, GraduationCap, User, Phone, HeartHandshake, BookOpen, MapPin } from "lucide-react";
@@ -99,13 +100,7 @@ export default async function StudentDetailPage({ params }: Props) {
                   </Badge>
                 )}
                 {student.class_tag && (
-                  <Badge
-                    variant="outline"
-                    className="text-xs"
-                    style={{ backgroundColor: classTagColor + "20", borderColor: classTagColor, color: classTagColor }}
-                  >
-                    {student.class_tag}
-                  </Badge>
+                  <ClassTag tag={student.class_tag} color={classTagColor} />
                 )}
                 {student.service_slot && (
                   <Badge variant="outline" className="text-xs border-blue-500/40 text-blue-700 dark:text-blue-400">

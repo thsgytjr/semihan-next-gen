@@ -4,8 +4,8 @@ import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { Palette } from "lucide-react";
-import { updateClassTagColor } from "@/app/actions/teachers";
+import { Palette, Trash2 } from "lucide-react";
+import { updateClassTagColor, deleteClassTag } from "@/app/actions/teachers";
 
 const COLOR_PALETTE = [
   "#ef4444", "#f97316", "#f59e0b", "#eab308",
@@ -151,6 +151,21 @@ export function StudentClassFilter({
                     title="색상 변경"
                   >
                     <Palette className="h-3 w-3 text-muted-foreground" />
+                  </button>
+                )}
+                {departmentId && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!confirm(`${name} 태그를 삭제하시겠습니까?\n(이 반을 사용 중인 학생의 반 정보는 삭제됩니다)`)) return;
+                      startTransition(async () => {
+                        await deleteClassTag(departmentId, name);
+                      });
+                    }}
+                    className="p-1 rounded-full hover:bg-muted transition-all"
+                    title="태그 삭제"
+                  >
+                    <Trash2 className="h-3 w-3 text-red-600" />
                   </button>
                 )}
               </div>
