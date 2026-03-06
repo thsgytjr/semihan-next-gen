@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
-import { LayoutDashboard, Users, ClipboardCheck, History } from "lucide-react";
+import { LayoutDashboard, Users, ClipboardCheck, History, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const departmentSlug = "sprout";
@@ -24,6 +24,12 @@ export function BottomNav() {
       href: `/dashboard/${departmentSlug}/students`,
       icon: Users,
       match: (p: string) => p.includes("/students"),
+    },
+    {
+      title: t("teachers"),
+      href: `/dashboard/${departmentSlug}/teachers`,
+      icon: GraduationCap,
+      match: (p: string) => p.includes("/teachers"),
     },
     {
       title: t("attendance"),

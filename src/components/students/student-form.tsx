@@ -12,12 +12,19 @@ import { Camera, X, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import type { Student } from "@/types/database";
 
+interface Teacher {
+  id: string;
+  display_name: string;
+}
+
 interface StudentFormProps {
   departmentId: string;
   student?: Student;
+  existingTags?: string[];
+  teachers?: Teacher[];
 }
 
-export function StudentForm({ departmentId, student }: StudentFormProps) {
+export function StudentForm({ departmentId, student, existingTags = [], teachers = [] }: StudentFormProps) {
   const t = useTranslations();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,6 +32,10 @@ export function StudentForm({ departmentId, student }: StudentFormProps) {
   const [preview, setPreview] = useState<string | null>(student?.photo_url ?? null);
   const [croppedBlob, setCroppedBlob] = useState<Blob | null>(null);
   const [cropSrc, setCropSrc] = useState<string | null>(null);
+  const [photoRemoved, setPhotoRemoved] = useState(false);
+  const [classTag, setClassTag] = useState(student?.class_tag ?? "");
+  const [serviceSlot, setServiceSlot] = useState<string>(student?.service_slot ?? "");
+  const [campus, setCampus] = useState<string>(student?.campus ?? "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,6 +53,7 @@ export function StudentForm({ departmentId, student }: StudentFormProps) {
     setCropSrc(null);
     setCroppedBlob(blob);
     setPreview(URL.createObjectURL(blob));
+    setPhotoRemoved(false);
   }
 
   function handleCropCancel() {
@@ -52,6 +64,7 @@ export function StudentForm({ departmentId, student }: StudentFormProps) {
   function removePhoto() {
     setPreview(null);
     setCroppedBlob(null);
+    setPhotoRemoved(true);
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
@@ -62,12 +75,20 @@ export function StudentForm({ departmentId, student }: StudentFormProps) {
 
     const formData = new FormData(e.currentTarget);
     formData.set("department_id", departmentId);
+    formData.set("class_tag", classTag.trim());
+    formData.set("service_slot", serviceSlot);
+    formData.set("campus", campus);
 
     if (croppedBlob) {
       formData.delete("photo");
       formData.set("photo", croppedBlob, "photo.jpg");
-    } else if (student?.photo_url && !croppedBlob) {
+    } else if (student?.photo_url && !photoRemoved) {
       formData.set("existing_photo_url", student.photo_url);
+    }
+
+    if (photoRemoved) {
+      formData.set("remove_photo", "true");
+      formData.set("existing_photo_url", student?.photo_url ?? "");
     }
 
     try {
@@ -205,6 +226,115 @@ export function StudentForm({ departmentId, student }: StudentFormProps) {
                 />
               </div>
 
+              {/* Class Tag */}
+              <div className="space-y-2">
+                <Label htmlFor="class_tag" className="text-sm font-medium">
+                  {t("students.classTag")}
+                </Label>
+                {existingTags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {existingTags.map((tag) => (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => setClassTag(classTag === tag ? "" : tag)}
+                        className={`px-3 py-1 rounded-full text-sm font-medium border transition-all ${
+                          classTag === tag
+                            ? "bg-green-600 text-white border-green-600"
+                            : "bg-background text-foreground border-border hover:border-green-400"
+                        }`}
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <Input
+                  id="class_tag"
+                  name="class_tag_input"
+                  value={classTag}
+                  onChange={(e) => setClassTag(e.target.value)}
+                  placeholder={t("students.classTagPlaceholder")}
+                  className="h-12 text-base rounded-xl"
+                  list="class-tag-suggestions"
+                />
+                <datalist id="class-tag-suggestions">
+                  {existingTags.map((tag) => (
+                    <option key={tag} value={tag} />
+                  ))}
+                </datalist>
+              </div>
+
+              {/* Service Slot */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  {t("students.serviceSlot")}
+                </Label>
+                <div className="flex gap-2">
+                  {["", "1부", "2부"].map((slot) => (
+                    <button
+                      key={slot || "unset"}
+                      type="button"
+                      onClick={() => setServiceSlot(slot)}
+                      style={
+                        serviceSlot === slot
+                          ? { backgroundColor: "#2563eb", color: "#ffffff", borderColor: "#2563eb" }
+                          : {}
+                      }
+                      className="flex-1 py-2 rounded-xl text-sm font-medium border border-border bg-background text-foreground hover:border-blue-400 transition-all"
+                    >
+                      {slot === "" ? t("students.serviceUnset") : slot}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Campus */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  {t("students.campus")}
+                </Label>
+                <div className="flex gap-2">
+                  {["", "노스", "캐롤튼"].map((c) => (
+                    <button
+                      key={c || "unset"}
+                      type="button"
+                      onClick={() => setCampus(c)}
+                      style={
+                        campus === c
+                          ? { backgroundColor: "#16a34a", color: "#ffffff", borderColor: "#16a34a" }
+                          : {}
+                      }
+                      className="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border bg-background text-foreground hover:border-green-400 transition-all"
+                    >
+                      {c === "" ? t("students.campusUnset") : c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Assigned Teacher */}
+              {teachers.length > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="teacher_id" className="text-sm font-medium">
+                    {t("students.teacher")}
+                  </Label>
+                  <select
+                    id="teacher_id"
+                    name="teacher_id"
+                    defaultValue={student?.teacher_id ?? ""}
+                    className="flex h-12 w-full rounded-xl border border-input bg-background px-4 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    <option value="">{t("students.noTeacher")}</option>
+                    {teachers.map((teacher) => (
+                      <option key={teacher.id} value={teacher.id}>
+                        {teacher.display_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="birth_date" className="text-sm font-medium">
                   {t("students.birthDate")}
@@ -219,6 +349,49 @@ export function StudentForm({ departmentId, student }: StudentFormProps) {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="graduation_date" className="text-sm font-medium">
+                  {t("students.graduationDate")}
+                </Label>
+                <Input
+                  id="graduation_date"
+                  name="graduation_date"
+                  type="date"
+                  defaultValue={student?.graduation_date ?? ""}
+                  className="h-12 text-base rounded-xl"
+                />
+              </div>
+
+              {/* Parent Info section */}
+              <div className="rounded-xl border border-border p-4 space-y-4">
+                <p className="text-sm font-semibold text-muted-foreground">{t("students.parentInfo")}</p>
+                <div className="space-y-2">
+                  <Label htmlFor="parent_name" className="text-sm font-medium">
+                    {t("students.parentName")}
+                  </Label>
+                  <Input
+                    id="parent_name"
+                    name="parent_name"
+                    defaultValue={student?.parent_name ?? ""}
+                    placeholder={t("students.parentName")}
+                    className="h-12 text-base rounded-xl"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="parent_phone" className="text-sm font-medium">
+                    {t("students.parentPhone")}
+                  </Label>
+                  <Input
+                    id="parent_phone"
+                    name="parent_phone"
+                    type="tel"
+                    defaultValue={student?.parent_phone ?? ""}
+                    placeholder="010-0000-0000"
+                    className="h-12 text-base rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="notes" className="text-sm font-medium">
                   {t("students.notes")}
                 </Label>
@@ -227,6 +400,20 @@ export function StudentForm({ departmentId, student }: StudentFormProps) {
                   name="notes"
                   defaultValue={student?.notes ?? ""}
                   placeholder={t("students.notes")}
+                  rows={2}
+                  className="flex w-full rounded-xl border border-input bg-background px-4 py-3 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="prayer_request" className="text-sm font-medium">
+                  {t("students.prayerRequest")}
+                </Label>
+                <textarea
+                  id="prayer_request"
+                  name="prayer_request"
+                  defaultValue={student?.prayer_request ?? ""}
+                  placeholder={t("students.prayerRequestPlaceholder")}
                   rows={3}
                   className="flex w-full rounded-xl border border-input bg-background px-4 py-3 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                 />

@@ -2,13 +2,16 @@
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 interface HeaderProps {
   title: string;
   children?: React.ReactNode;
+  backHref?: string;
 }
 
-export function Header({ title, children }: HeaderProps) {
+export function Header({ title, children, backHref }: HeaderProps) {
   return (
     <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b bg-background/95 backdrop-blur px-4 lg:px-6">
       {/* Desktop: sidebar trigger */}
@@ -16,6 +19,15 @@ export function Header({ title, children }: HeaderProps) {
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="h-6" />
       </div>
+      {/* Mobile: back button */}
+      {backHref && (
+        <Link
+          href={backHref}
+          className="lg:hidden flex items-center justify-center h-8 w-8 -ml-1 rounded-lg hover:bg-accent transition-colors shrink-0"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Link>
+      )}
       <h1 className="text-base font-bold tracking-tight flex-1 lg:text-lg">{title}</h1>
       <div className="flex items-center gap-2">{children}</div>
     </header>

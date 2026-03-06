@@ -33,31 +33,69 @@ export type Database = {
         };
         Relationships: [];
       };
+      class_tags: {
+        Row: {
+          id: string;
+          department_id: string;
+          name: string;
+          color: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          department_id: string;
+          name: string;
+          color?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          department_id?: string;
+          name?: string;
+          color?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "class_tags_department_id_fkey";
+            columns: ["department_id"];
+            isOneToOne: false;
+            referencedRelation: "departments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           id: string;
-          email: string;
+          email: string | null;
           display_name: string;
           role: "admin" | "teacher";
           department_id: string | null;
+          campus: string | null;
+          service_slot: string | null;
           created_at: string;
           updated_at: string;
         };
         Insert: {
-          id: string;
-          email: string;
+          id?: string;
+          email?: string | null;
           display_name: string;
           role?: "admin" | "teacher";
           department_id?: string | null;
+          campus?: string | null;
+          service_slot?: string | null;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
-          email?: string;
+          email?: string | null;
           display_name?: string;
           role?: "admin" | "teacher";
           department_id?: string | null;
+          campus?: string | null;
+          service_slot?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -79,6 +117,14 @@ export type Database = {
           department_id: string;
           birth_date: string | null;
           notes: string | null;
+          class_tag: string | null;
+          teacher_id: string | null;
+          parent_name: string | null;
+          parent_phone: string | null;
+          graduation_date: string | null;
+          prayer_request: string | null;
+          service_slot: string | null;
+          campus: string | null;
           is_active: boolean;
           created_at: string;
           updated_at: string;
@@ -90,6 +136,14 @@ export type Database = {
           department_id: string;
           birth_date?: string | null;
           notes?: string | null;
+          class_tag?: string | null;
+          teacher_id?: string | null;
+          parent_name?: string | null;
+          parent_phone?: string | null;
+          graduation_date?: string | null;
+          prayer_request?: string | null;
+          service_slot?: string | null;
+          campus?: string | null;
           is_active?: boolean;
           created_at?: string;
           updated_at?: string;
@@ -101,6 +155,14 @@ export type Database = {
           department_id?: string;
           birth_date?: string | null;
           notes?: string | null;
+          class_tag?: string | null;
+          teacher_id?: string | null;
+          parent_name?: string | null;
+          parent_phone?: string | null;
+          graduation_date?: string | null;
+          prayer_request?: string | null;
+          service_slot?: string | null;
+          campus?: string | null;
           is_active?: boolean;
           created_at?: string;
           updated_at?: string;
@@ -222,3 +284,4 @@ export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type Student = Database["public"]["Tables"]["students"]["Row"];
 export type Event = Database["public"]["Tables"]["events"]["Row"];
 export type Attendance = Database["public"]["Tables"]["attendance"]["Row"];
+export type ClassTag = Database["public"]["Tables"]["class_tags"]["Row"];

@@ -29,6 +29,7 @@ import {
   History,
   LogOut,
   Sprout,
+  GraduationCap,
 } from "lucide-react";
 
 const departmentSlug = "sprout";
@@ -50,6 +51,11 @@ export function AppSidebar() {
       title: t("nav.students"),
       href: `/dashboard/${departmentSlug}/students`,
       icon: Users,
+    },
+    {
+      title: t("nav.teachers"),
+      href: `/dashboard/${departmentSlug}/teachers`,
+      icon: GraduationCap,
     },
     {
       title: t("nav.attendance"),

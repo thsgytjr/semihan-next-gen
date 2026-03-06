@@ -35,11 +35,28 @@ export default async function EditStudentPage({ params }: Props) {
     notFound();
   }
 
+  const { data: tagRows } = await supabase
+    .from("students")
+    .select("class_tag")
+    .eq("department_id", department.id)
+    .eq("is_active", true)
+    .not("class_tag", "is", null);
+
+  const existingTags = [...new Set((tagRows ?? []).map((r) => r.class_tag as string))].sort();
+
+  const { data: teacherRows } = await supabase
+    .from("profiles")
+    .select("id, display_name")
+    .eq("department_id", department.id)
+    .order("display_name");
+
+  const teachers = teacherRows ?? [];
+
   return (
     <>
       <Header title={t("students.editStudent")} />
       <main className="flex-1 p-4 lg:p-6">
-        <StudentForm departmentId={department.id} student={student} />
+        <StudentForm departmentId={department.id} student={student} existingTags={existingTags} teachers={teachers} />
       </main>
     </>
   );

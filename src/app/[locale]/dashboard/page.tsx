@@ -4,6 +4,8 @@ import { Header } from "@/components/layout/header";
 import { Users, ClipboardCheck, TrendingUp, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
+type StudentBreakdown = { campus: string | null; service_slot: string | null; class_tag: string | null };
+
 type Props = {
   params: Promise<{ locale: string }>;
 };
@@ -27,6 +29,51 @@ export default async function DashboardPage({ params }: Props) {
     .select("*", { count: "exact", head: true })
     .eq("is_active", true)
     .eq("department_id", department?.id ?? "");
+
+  // Get all active students for breakdown stats
+  const { data: breakdownStudents } = await supabase
+    .from("students")
+    .select("campus, service_slot, class_tag")
+    .eq("department_id", department?.id ?? "")
+    .eq("is_active", true);
+
+  const allStudents: StudentBreakdown[] = breakdownStudents ?? [];
+
+  // Fetch class tag colors
+  const { data: classTagRows } = await supabase
+    .from("class_tags")
+    .select("name, color")
+    .eq("department_id", department?.id ?? "");
+  const colorMap = new Map<string, string>(
+    (classTagRows ?? []).map((r) => [r.name, r.color ?? "#22c55e"])
+  );
+
+  // Campus breakdown
+  const campusCounts = new Map<string, number>();
+  for (const s of allStudents) {
+    if (s.campus) campusCounts.set(s.campus, (campusCounts.get(s.campus) ?? 0) + 1);
+  }
+
+  // Service slot breakdown
+  const serviceCounts = new Map<string, number>();
+  let serviceUnset = 0;
+  for (const s of allStudents) {
+    if (s.service_slot) {
+      serviceCounts.set(s.service_slot, (serviceCounts.get(s.service_slot) ?? 0) + 1);
+    } else {
+      serviceUnset++;
+    }
+  }
+
+  // Class tag breakdown
+  const tagCounts = new Map<string, number>();
+  for (const s of allStudents) {
+    if (s.class_tag) tagCounts.set(s.class_tag, (tagCounts.get(s.class_tag) ?? 0) + 1);
+  }
+
+  const hasCampus = campusCounts.size > 0;
+  const hasServiceSlots = serviceCounts.size > 0;
+  const hasClassTags = tagCounts.size > 0;
 
   // Get today's attendance
   const today = new Date().toISOString().split("T")[0];
@@ -93,6 +140,80 @@ export default async function DashboardPage({ params }: Props) {
             </div>
           ))}
         </div>
+
+        {/* Campus Breakdown */}
+        {hasCampus && (
+          <div className="space-y-2">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+              {t("dashboard.byCampus")}
+            </p>
+            <div className="grid gap-2 grid-cols-2">
+              {Array.from(campusCounts.entries()).map(([campus, count]) => (
+                <Link key={campus} href={`/${locale}/dashboard/sprout/students?campus=${encodeURIComponent(campus)}`}>
+                  <div className="rounded-2xl border border-border bg-card p-4 hover:border-gray-400 transition-colors cursor-pointer">
+                    <div className="text-2xl font-bold">{count}</div>
+                    <p className="text-sm text-muted-foreground mt-0.5">{campus}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Service Slot Breakdown */}
+        {hasServiceSlots && (
+          <div className="space-y-2">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+              {t("dashboard.byService")}
+            </p>
+            <div className="grid gap-2 grid-cols-3">
+              {["1부", "2부"].map((slot) => (
+                <Link key={slot} href={`/${locale}/dashboard/sprout/students?service=${encodeURIComponent(slot)}`}>
+                  <div className="rounded-2xl border border-border bg-card p-4 text-center hover:border-blue-400 transition-colors cursor-pointer">
+                    <div className="text-2xl font-bold text-blue-600">{serviceCounts.get(slot) ?? 0}</div>
+                    <p className="text-sm text-muted-foreground mt-0.5">{slot}</p>
+                  </div>
+                </Link>
+              ))}
+              <div className="rounded-2xl border border-border bg-card p-4 text-center">
+                <div className="text-2xl font-bold text-muted-foreground">{serviceUnset}</div>
+                <p className="text-sm text-muted-foreground mt-0.5">{t("dashboard.unset")}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Class Tag Breakdown */}
+        {hasClassTags && (
+          <div className="space-y-2">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+              {t("dashboard.byClass")}
+            </p>
+            <div className="rounded-2xl border border-border bg-card p-4">
+              <div className="flex flex-wrap gap-2">
+                {Array.from(tagCounts.entries())
+                  .sort((a, b) => a[0].localeCompare(b[0]))
+                  .map(([name, count]) => {
+                    const color = colorMap.get(name) ?? "#22c55e";
+                    return (
+                      <Link
+                        key={name}
+                        href={`/${locale}/dashboard/sprout/students?tag=${encodeURIComponent(name)}`}
+                      >
+                        <span
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border cursor-pointer hover:opacity-80 transition-opacity"
+                          style={{ backgroundColor: color + "20", borderColor: color, color }}
+                        >
+                          {name}
+                          <span className="font-bold">{count}</span>
+                        </span>
+                      </Link>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Quick Actions */}
         <div className="space-y-2">
